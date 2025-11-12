@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        // Ensure Node.js is in PATH (adjust path if Node.js is installed elsewhere)
+        // Ensure Node.js is in PATH (adjust if installed elsewhere)
         PATH = "C:\\Program Files\\nodejs;${PATH}"
     }
 
@@ -24,7 +24,6 @@ pipeline {
         stage('Build') {
             steps {
                 echo "🏗️ Building Node.js project..."
-                // Run build command (defined in package.json)
                 bat 'npm run build'
             }
         }
@@ -32,7 +31,6 @@ pipeline {
         stage('Test') {
             steps {
                 echo "🧪 Running tests..."
-                // Optional: if you have test scripts defined
                 bat 'npm test'
             }
         }
@@ -40,4 +38,21 @@ pipeline {
         stage('Archive Artifacts') {
             steps {
                 echo "📁 Archiving built files..."
-                // Assuming
+                archiveArtifacts artifacts: 'dist/**/*.*', fingerprint: true
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Build completed successfully!"
+        }
+        failure {
+            echo "❌ Build failed. Please check console output."
+        }
+        always {
+            echo "🧹 Cleaning up workspace..."
+            cleanWs()
+        }
+    }
+}
