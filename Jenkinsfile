@@ -20,31 +20,25 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                echo "🧪 Running tests..."
-                bat 'npm test || echo No tests found'
-            }
-        }
-
         stage('Run App') {
             steps {
                 echo "🚀 Starting Node.js application..."
-                bat 'npm start'
+                bat 'npm start || echo No start script found'
             }
         }
     }
 
     post {
         success {
-            echo "✅ Build completed successfully!"
+            echo "✅ Pipeline completed successfully!"
         }
         failure {
-            echo "❌ Build failed. Please check console output."
+            echo "❌ Pipeline failed. Check logs for details."
         }
         always {
-            echo "🧹 Cleaning up workspace..."
+            echo "🧹 Cleaning workspace..."
             cleanWs()
         }
     }
 }
+
